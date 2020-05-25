@@ -1,6 +1,6 @@
-###水平居中
+## 水平居中
 
-##行内块水平居中
+### 行内块水平居中
 ```css
 .container {
     text-align: center;
@@ -9,7 +9,7 @@
     display: inline-block;
 }
 ```
-##表格table水平居中
+### 表格table水平居中
 ```css
 .container {
     
@@ -19,7 +19,7 @@
     margin: 0 auto;
 }
 ```
-##margin: 0 auto水平居中
+### margin: 0 auto水平居中
 ```css
 .container {
     
@@ -29,7 +29,7 @@
     margin: 0 auto;
 }
 ```
-##flex水平居中
+### flex水平居中
 ```css
 .container {
     display: flex;
@@ -40,7 +40,7 @@
 }
 ```
 
-##绝对定位居中
+### 绝对定位居中
 ```css
 .container {
     width: 100%;
@@ -56,9 +56,9 @@
 }
 ```
 
-###垂直居中
+## 垂直居中
 
-##flex垂直居中
+### flex垂直居中
 ```css
 .container {
     display: flex;
@@ -68,7 +68,7 @@
 
 }
 ```
-##绝对定位垂直居中
+### 绝对定位垂直居中
 ```css
 .container {
     position: relative;
@@ -82,7 +82,7 @@
     height: 100px;
 }
 ```
-##flex垂直居中
+### flex垂直居中
 ```css
 .container {
     display: flex;
@@ -93,7 +93,7 @@
 }
 ```
 
-##vertical-align垂直居中
+### vertical-align垂直居中
 ```css
 .container {
     height: 100px; //要设置高，或者行高才会生效
@@ -106,7 +106,7 @@
 }
 ```
 
-##水平垂直居中
+## 水平垂直居中
 ```css
 .container{
     display:table-cell;
