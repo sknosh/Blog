@@ -90,3 +90,13 @@ console.log(newPeople.__proto__) // { name: '小明' }
 
 ### Object.create(null)跟{}的区别
 Object.create(null)没有继承任何原型方法，而{}的继承了object的方法
+
+### new Set()方法
+*有add，clear（删除全部键值对，没返回），delete，has，forEach返回类数组对象，可用于去重，并集，交集等*
+
+##### 去重
+```javascript
+let arr = [1,2,3,3,1,4];
+Array.from(new Set(arr)); // [1, 2, 3, 4] 数组去重
+[...new Set('ababc')].join('')  //abc 字符串去重
+```
