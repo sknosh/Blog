@@ -4,9 +4,9 @@
 
 在菜单栏选中option，然后如下图设置就可以了
 
-![](https://github.com/sknosh/blog/blob/master/blogs/image/fiddler/fiddler1.jpg)
+![](./image/fiddler/fiddler1.jpg)
 
-![](https://github.com/sknosh/blog/blob/master/blogs/image/fiddler/fiddler2.jpg)
+![](./image/fiddler/fiddler2.jpg)
 
 
 ### 手机步骤：
