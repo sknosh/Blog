@@ -1,0 +1,39 @@
+### 强制缓存（状态码：200）
+强制缓存又叫做本地缓存，即不用发送请求直接从本地缓存里拿到数据，设置强制缓存的有expires和cached-control这两个header字段，cached-control优先级高于expires，一起使用时会覆盖掉expires
+
+expires：
+
+http1.0的规范，使用的是绝对时间，在num（expires=GMT时间）时间之前，缓存都有效，过期则要重新请求数据
+
+cached-control：
+
+http1.1的规范，使用的是相对时间，表示当前时间加上num（max-age=num）时间内缓存有效
+
+- no-cached  不使用本地缓存
+- no-stroe 不允许服务器缓存数据
+- public 允许所有终端缓存数据，包括终端用户和CND
+- private 只允许终端用户的浏览器缓存，不允许CDN缓存
+
+
+### 协商缓存（状态码：304）
+当强制缓存不生效，要去服务器请求数据的时候发生的，设置协商缓存的有Last-Modify/If-Modified-Since和Etag/If-None-Match这两个header字段，这两个字段都是成对出现的，Etag优先级高于Last-Modify，一起使用时，服务器会优先验证Etag，然后再对比Last-Modify，最后决定是否返回304
+
+Last-Modify/If-Modified-Since：这两个都是使用GMT时间格式，过程如下
+
+- 第一次请求时，response header中返回Last-Modify，表示最后修改时间
+- 下一次请求时，request header中带着If-Modified-Since，去请求服务器看看是不是上次的最后修改时间
+- 如果是上次最后修改时间，表示文件没修改过，直接从缓存中拿数据，服务端返回304
+- 如果不是上次最后修改时间，从服务器去拿到数据，同时返回Last-Modify，表示最后修改时间
+
+ETag/If-None-Match：这两个都是由服务器生成的唯一字符串，只有在请求的资源发生表示的时候才会改变，和上面不同的是，当从缓存拿数据返回304的时候，response header中的Etag还是会返回，即使和之前的值一样
+
+Etag的使用场景：
+
+- 当资源定时更新，但是内容不变的时候
+- 当资源每秒更新好多次的时候，而Last-Modify是GMT时间格式只能精确到秒
+
+
+
+
+
+
