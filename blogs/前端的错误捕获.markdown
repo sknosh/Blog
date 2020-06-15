@@ -1,0 +1,108 @@
+### 错误的类型
+
+在JavaScript中Error是一个构造函数，当运行错误的时候被抛出，Error只有一个标准方法，Error.prototype.toString：返回表示一个表示错误的字符串
+
+```javascript
+    var a = new Error('错误信息');
+    console.log(a) // Error: 错误信息 at <anonymous>:1:9
+    a.toString()   // "Error: 错误信息"
+```
+
+Error的种类
+
+除了通用的Error构造函数外，JavaScript还有7个其他类型的错误构造函数
+
+- InternalError：   创建一个代表Javascript引擎内部错误的异常抛出的实例
+- RangeError：      数值变量或参数超出其有效范围。
+- EvalError：       与eval()相关的错误
+- ReferenceError:   引用错误 例子：a未定义，console.log(a)
+- SyntaxError:      语法错误  例子：var a = ;
+- TypeError:        变量或参数不属于有效范围  例子：[1,2].split('.')
+- URIError:         给encodeURI或decodeURl()传递的参数无效
+
+一个网页在运行过程中，可能发生四种错误：
+
+- JavaScript在运行过程，语言自身抛出的异常。
+- JavaScript在运行过程中，调用Web Api时发生异常。
+- Promise中的拒绝。
+- 网页加载资源，调用接口时发生异常。
+
+对于前两种错误，不用特别去区分，可以统一成：代码出错
+
+---
+
+### 代码捕获的方式：
+
+cry-catch：
+
+正常情况
+
+```javascript
+    try {
+        throw new Error("aa");
+    }
+    catch (e) {
+        console.log("error", e.message); // error aa 正常捕获
+    }
+```
+
+异步情况
+
+```javascript
+    try {
+        setTimeout(function() {
+            throw new Error('aa');
+        } ,0)
+    } catch(e) {
+        console.log('error', e.message) // Uncaught Error: aa 不能捕获到
+    }
+```
+原因： Javascript在执行过程中遇到setTimeout,会把它放到任务队列中，然后继续往下执行，当执行完当前所有的微任务（promise等）后，再去执行宏任务（setTimeout等），在这个过程中try结束未发现异常也就不执行catch了，当调用栈执行结束，开始任务队列里的代码，这个时候抛出了错误，但已经没有接受此错误的地方了，所以报错,可以通过promise.catch去捕获，还可以用async/await，然后再catch里捕获，如果不想用catch可以window.addEventListener('unhandledrejection')也能捕获到该异常
+
+缺点：
+- 没法捕捉到异步错误事件
+- 没法捕捉到全局的错误事件
+
+window.onerror：
+
+window.onerror可以拿到出错的信息以及文件名、行号、列号，还可以在window.onerror最后return true让浏览器不输出错误信息到控制台
+
+```javascript
+window.onerror = function(message, source, lineno, colno, error) { 
+    return true // 阻止浏览器console输出
+}
+```
+
+函数参数：
+
+- message：错误信息（字符串）
+- source：发生错误的脚本URL（字符串）
+- lineno：发生错误的行号（数字）
+- colno：发生错误的列号（数字）
+- error：Error对象（对象）
+
+注意点：
+- window.onerror能捕捉到语法错误，但是语法出错的代码块不能跟window.onerror在同一个块（语法都没过，更别提window.onerror会被执行了）
+- 对于跨域的JS资源，window.onerror拿不到详细的信息，需要往资源的请求添加额外的头部，相关的js文件上加上Access-Control-Allow-Origin:*的response header和crossorigin属性
+- 不能捕获带有src的标签元素的加载错误
+
+window.addEventListener('error'):
+
+window.addEventListener：event.preventDefault()可以让浏览器不输出错误信息到控制台
+
+```javascript
+function handleListenerError (event){
+　　// some code
+　　event.preventDefault() // 阻止浏览器console输出
+}
+```
+
+
+window.onerror 和 window.addEventListener('error')的区别:
+
+- 首先是事件监听器和事件处理器的区别，监听器只能声明一次，后续的声明会覆盖之前的声明，而事件处理器则可以绑定多个回调函数
+- window.addEventListener('error')能捕获带有src的标签元素的加载错误
+
+总结：
+
+对于容易出错的地方，可以使用try{}catch(){}来进行错误的捕获，做好兜底处理，避免页面挂掉。而对于全局的错误捕获，在现代浏览器中，使用window.addEventListener('error')，window.addEventListener('unhandledrejection')就行了。如果需要考虑兼容性，需要加上window.onerror，三者同时使用，window.addEventListener('error')专门用来捕获资源加载错误。
