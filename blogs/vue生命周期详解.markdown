@@ -28,7 +28,6 @@ console.log("data:" + this.$data); //已被初始化
 ```javascript
 console.log("el:" + this.$el); //已被初始化
 console.log("data:" + this.$data); //已被初始化 
-console.log("data:" + this.$data); //已被初始化 
 
 var app = new Vue({
     data: {
@@ -45,7 +44,7 @@ var app = new Vue({
 })
 ```
 ### mount：
-完成挂载，可以拿到真实的dom
+完成挂载，rander转化成VNode，可以拿到真实的dom
 
 ### beforeUpdate：
 当数据更新后出发的钩子函数，这个钩子函数里拿到的是更改之前的数据，虚拟DOM重新渲染之前被调用，可以在这个钩子中进一步地修改data，这不会触发附加的重渲染过程。
