@@ -130,6 +130,18 @@ let arr2 = new Set([4, 3, 2]);
 let union = new Set([...arr1].filter((item) => {arr2.！has(item)})); // {1}
 ```
 
+### ~~
+~~它代表双非按位取反运算符，比Math.floor()更快的方法
+
+```javascript
+~~null = 0
+~~undefined = 0
+~~-1.2 = -1
+~~ 1.2 = 1
+~~false = 0
+~~true = 1
+```
+
 ### rem原理
 
 ### tcp协议
