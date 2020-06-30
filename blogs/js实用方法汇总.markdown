@@ -54,8 +54,32 @@ call方法
 
 思路： 通过闭包保存上一次的计算结果
 
-*引用类型转换为字符串会优先自动调用toString如果没有调用就valueOf，引用类型转换为数字会优先自动调用valueOf如果没有就调用toString*
+- 引用类型转换为字符串会优先自动调用toString如果没有调用就valueOf
+- 引用类型转换为数字会优先自动调用valueOf如果没有就调用toString
+- 引用类型转换为方法，下面函数仅仅是调用了result而不是result()，打印出来是下面结果，其实这里调用valueOf,如果返回不是原始类型，将继续调用toString
+```javascript
+function add(a) {
+    function result(b) {
+        a += b
+        return result
+    }
+  
+    console.log(result)
+}
 
+// 调用add
+add
+// 打印结果：
+ƒ add(a) {
+    function result(b) {
+        a += b
+        return result
+    }
+  
+    console.log(result)
+}
+```
+解题：
 ```javascript
 function add(a) {
     function result(b) {
@@ -79,7 +103,7 @@ function add(a) {
     }
     return fun;
 }
-console.log(add(1)(2)(3)(4)(6));   //10
+console.log(add(1)(2)(3)(4)(6));   //16
 ```
 
 ### Object.create(proto, [propertiesObject])
@@ -127,7 +151,7 @@ let union = new Set([...arr1].filter((item) => {arr2.has(item)})); // {2, 3}
 ```javascript
 let arr1 = new Set([1, 2, 3]);
 let arr2 = new Set([4, 3, 2]);
-let union = new Set([...arr1].filter((item) => {arr2.！has(item)})); // {1}
+let union = new Set([...arr1].filter((item) => {arr2.!has(item)})); // {1}
 ```
 
 ### ~~
@@ -142,9 +166,43 @@ let union = new Set([...arr1].filter((item) => {arr2.！has(item)})); // {1}
 ~~true = 1
 ```
 
-### rem原理
-
 ### tcp协议
 
-### 1px问题
+*参考阮一峰老师*
+
+以太网协议、ip协议、tcp协议、http协议
+
+- 以太网协议：解决局域网内的点对点通信
+- ip协议： 解决多个局域网直接的通信
+- tcp协议： 保证数据通信的完整性和可靠性，防止丢包
+- http协议： 应用层协议
+
+
+TCP的seq：
+
+一个包的大小为1400个字节，一次性发送大量数据，就必须分成多个包，发送的时候，TCP 协议为每个包编号（SEQ），以便接收的一方按照顺序还原,万一发生丢包，也可以知道丢失的是哪一个包。
+
+第一个包的编号是一个随机数，假设为1号包，假定这个包的负载长度是100字节，那么可以推算出下一个包的编号应该是101。这就是说，每个数据包都可以得到两个编号：自身的编号，以及下一个包的编号。接收方由此知道，应该按照什么顺序将它们还原成原始文件。
+
+TCP的ack：
+
+携带信息:
+- 期待要收到下一个数据包的编号
+- 接收方的接收窗口的剩余容量
+
+默认情况下，接收方每收到两个 TCP 数据包，就要发送一个确认消息。"确认"的英语是 acknowledgement，所以这个确认消息就简称 ACK。
+
+tcp传输图：
+
+![](./image/tcp/tcp.png)
+
+
+tcp数据包遗失处理：
+
+每一个数据包都带有下一个数据包的编号。如果下一个数据包没有收到，那么 ACK 的编号就不会发生变化，这会导致大量重复内容的 ACK
+
+如果发送方发现收到三个连续的重复 ACK，或者超时了还没有收到任何 ACK，就会确认丢包，从而再次发送这个包。
+
+通过这种机制，TCP 保证了不会有数据包丢失。
+
 
