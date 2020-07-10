@@ -206,3 +206,53 @@ tcp数据包遗失处理：
 通过这种机制，TCP 保证了不会有数据包丢失。
 
 
+### Promise.all 其中某个请求出现异常
+Promise.all 其中某个请求出现异常，在then中就会直接返回reject的值
+
+```javascript
+function a() {
+    return Promise.all([
+        Promise.reject(1),
+        Promise.resolve(2),
+        Promise.resolve(3)
+    ])
+}
+a.then(res => {
+    console.log(res)
+}, err => {
+    console.log(err) // 1
+})
+
+// 用catch方法改变状态
+function a() {
+    return Promise.all([
+        Promise.reject(1),
+        Promise.resolve(2),
+        Promise.resolve(3)
+    ].map(p => p.catch(e => e)))
+    // map的每一项都是promise, catch方法返回值会被promise.resolve()包裹，这样promise.all的数据都是resolve状态的
+    .then(res => {
+        console.log(res) // [1,2,3]
+    }, err => {
+        console.log(err) 
+    })
+}
+a()
+
+// 还可以这样去捕获：
+function a() {
+    return Promise.all([
+        // .then返回的也是promise对象，返回promise对象后就变成resolve状态了
+        Promise.reject(1).then(res => {console.log(res)}, err => {console.log(err)}),
+        Promise.resolve(2).then(res => {console.log(res)}, err => {console.log(res)}),
+        Promise.resolve(3).then(res => {console.log(res)}, err => {console.log(res)})
+    ])
+    // map的每一项都是promise, catch方法返回值会被promise.resolve()包裹，这样promise.all的数据都是resolve状态的
+    .then(res => {
+        console.log(res) // [1,2,3]
+    }, err => {
+        console.log(err) 
+    })
+}
+a()
+```

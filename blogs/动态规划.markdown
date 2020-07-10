@@ -58,7 +58,7 @@ maximum(n) {
     const len = n.length
     // 创建固定长度的二维数组
     dp = Array.from(new Array(len), () => new Array(2))
-    for (let i = 2; i <= n; i++) {
+    for (let i = 0; i <= n; i++) {
         if (i == 0) {
             dp[i][0] = 0
             dp[i][1] = -price
