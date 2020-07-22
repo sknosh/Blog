@@ -18,7 +18,7 @@ this.$on('hook:updated', () => {})
 3.在模板中通过@hooks:created这种形式
 
 ```javascript
-    <Table @hook:updated="handleTableUpdated"></Table>
+    <Table @hook:created="handleTableUpdated"></Table>
 ```
 ### mixin
 
