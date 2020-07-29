@@ -99,7 +99,7 @@ function add(a) {
     return fun;
     }
     fun.toString = function () {
-    return a;
+        return a;
     }
     return fun;
 }
@@ -164,6 +164,61 @@ let union = new Set([...arr1].filter((item) => {arr2.!has(item)})); // {1}
 ~~ 1.2 = 1
 ~~false = 0
 ~~true = 1
+```
+
+### 数组转化为树形结构
+
+开发中由于会给我们返回下面这种格式，即是一维的数组对象，但是在使用框架（elementUi）的时候，会要求传二维的数组对象，所以要改造一下
+
+```javascript
+let arr = [
+  {
+    id: 1,
+    name: '1',
+    pid: 0,
+  },
+  {
+    id: 2,
+    name: '1-1',
+    pid: 1,
+  },
+  {
+    id: 3,
+    name: '1-1-1',
+    pid: 2,
+  },
+  {
+    id: 4,
+    name: '1-2',
+    pid: 1,
+  },
+  {
+    id: 5,
+    name: '1-2-2',
+    pid: 4,
+  }
+]
+
+// 实现方法
+function toTree(data, parentId = 0) {
+  let itemArr = []
+  for (let i = 0; i < data.length; i++) {
+    let node = data[i]
+    if (node.pid === parentId) {
+      let newNode = {
+        ...node,
+        name: node.name,
+        id: node.id,
+        children: toTree(data, node.id),
+      }
+      itemArr.push(newNode)
+    }
+  }
+  return itemArr
+}
+
+console.log(toTree(arr))
+
 ```
 
 ### tcp协议
